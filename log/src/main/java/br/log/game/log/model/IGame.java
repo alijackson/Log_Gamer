@@ -5,10 +5,12 @@
  */
 package br.log.game.log.model;
 
+
 /**
  *
  * @author alijackson.msilva
  */
 public interface IGame {
-    
+   @Override
+   String toString(); 
 }

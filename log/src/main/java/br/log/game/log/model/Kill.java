@@ -11,14 +11,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
  * @author alijackson.msilva
  */
+@ToString
 @Getter
 @Setter
-public class Kill {
+public class Kill implements IGame {
     
     private String log;
     private String causa;

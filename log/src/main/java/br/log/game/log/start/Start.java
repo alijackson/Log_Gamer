@@ -23,7 +23,6 @@ public class Start {
     @Bean
     public void readFile() throws IOException{
         String linha = "";
-        int cont = 1;
         try (BufferedReader log =  
                 new BufferedReader(new FileReader("log\\games.log"))){
             Game game = new Game("game_1");

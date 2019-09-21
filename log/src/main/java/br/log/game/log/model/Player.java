@@ -8,16 +8,22 @@ package br.log.game.log.model;
 import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
  * @author alijackson.msilva
  */
+@ToString
 @Getter
 @Setter
-public class Player {
+public class Player implements IGame{
     private String nome;
     private ArrayList<Kill> kill = null;
     
+    public Player(String player) {
+    	this.nome = player;
+    }
+    public Player() {}
     
 }
