@@ -23,7 +23,10 @@ public class Player implements IGame{
     
     public Player(String player) {
     	this.nome = player;
+    	kill = new ArrayList<>();
     }
-    public Player() {}
+    public Player() {
+    	kill = new ArrayList<>();
+    }
     
 }
