@@ -19,20 +19,20 @@ import lombok.Setter;
 @Getter
 public class Game {
     private final String sessao;
-    private ArrayList<Player> players = null;
+    private ArrayList<Player> players = new ArrayList<>();
+    private Kill kill = null;
     @Setter
-    private byte cont = 0;
+    private int cont = 0;
+    private int i = 0;
+    @Setter
     private StringBuilder tmpPlayer = new StringBuilder();
     
     public Game(String sessao){
         this.sessao = sessao;
         players = new ArrayList<>();
+        kill = new Kill();
     }
     public void log (String log){
-      Player player = new Player();
-      IGame igame = null;
-      Kill kill = new Kill();
-      
       Expressao ex = new Expressao("player");
       // Create a Pattern object
       Pattern r = Pattern.compile(ex.getPlayer());
@@ -40,48 +40,72 @@ public class Game {
       Matcher m = r.matcher(log);
       while(m.find()){
 
-          System.out.println(m.group());
+          Player player = new Player();
+          
           String [] all = m.group().split(" ");
-          String [] modPlayers = new String[2];
           
           for(String detalhe : all) {
-        	  igame = decisao(detalhe, kill, player);
-	          System.out.println(player);
-	          System.out.println(kill);
+        	  decisao(detalhe, player);
           }
+	      if(hasPlayer(player) >= 0) {
+	    	  player = players.get(hasPlayer(player));
+	    	  player.getKill().add(kill);
+	      }
+	      else {
+	    	  player.getKill().add(kill);
+	    	  
+	    	  players.add(player);
+	      }
+	      
+	      kill = new Kill();
       }
+      
     }
-    private boolean exists(ArrayList<Player> players, String player){
-                return false;
+    private int hasPlayer(Player p) {
+    	int id = 0;
+    	for (Player x : this.players) {
+    		if(p.getNome() != null && x.getNome().trim().equalsIgnoreCase(p.getNome()))
+    			return id;
+    		id++;
+    	}
+    	
+    	return -1;
     }
-    private IGame decisao(String detalhe, Kill kill, Player player) {
+    private void decisao(String detalhe, Player player) {
     	if(detalhe.matches("\\d{1,2}:\\d{1,2}")) {
     		kill.setLog(detalhe);
-    		return kill;
+    		return;
   	  	}
-    	if(cont == 0  && !detalhe.equalsIgnoreCase("killed") && detalhe.matches("\\w*")) {
-    		this.tmpPlayer.append(detalhe);
+    	
+    	if(!detalhe.equalsIgnoreCase("killed") && 
+    			!detalhe.trim().equalsIgnoreCase("by") &&
+    			detalhe.matches("[a-zA-Z]*")) {
+    		this.tmpPlayer.append(" ").append(detalhe);
+
+    		return;
+    	}
+    	if(detalhe.equalsIgnoreCase("<world>")) {
+    		kill.setMatou(new Player("Sistema"));
+    		return;
     	}
     	if(detalhe.equalsIgnoreCase("killed")) {
-    		kill.setMatou(new Player(tmpPlayer.toString()));
-    		tmpPlayer = new StringBuilder();
-    		cont++;
-    		return kill;
+    		kill.setMatou(new Player(tmpPlayer.toString().trim()));
+    		setTmpPlayer(new StringBuilder());
+    		return;
     	}
-    	if(cont == 1 && !detalhe.equalsIgnoreCase("by") && detalhe.matches("\\w*")) {
+    	if(!detalhe.trim().equalsIgnoreCase("by") && detalhe.matches("[a-zA-Z]*")) {
     		this.tmpPlayer.append(detalhe);
+    		return;
     	}
     	if(detalhe.equalsIgnoreCase("by")) {
-    		player.setNome(tmpPlayer.toString());
-    		tmpPlayer = new StringBuilder();
-    		cont++;
-    		return player;
+    		player.setNome(tmpPlayer.toString().trim());
+    		setTmpPlayer(new StringBuilder());
+    		return;
     	}
-    	if(cont == 2 && detalhe.matches("\\w*")) {
+    	if(detalhe.matches("\\w*")) {
     		kill.setCausa(detalhe);
-    		cont++;
-    		return kill;
+    		return;
     	}
-    	return player;
+    	return;
     }
 }
