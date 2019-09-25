@@ -40,6 +40,11 @@ public class Start {
                 game.log(linha);
             }
         }        
+        }
+        
+        catch (IOException e) {
+        	throw new IllegalArgumentException("Problemas na leitura do arquivo");
+		}
     }
 }
 
