@@ -8,6 +8,8 @@ package br.log.game.log.start;
 import br.log.game.log.model.Game;
 import br.log.game.log.model.Kill;
 import br.log.game.log.model.Player;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -20,12 +22,16 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author alijackson.msilva
  */
-@Configuration
+//@Configuration
 public class Start {
-    @Bean
+//    @Bean
+	
+	@Getter
+	@Setter
+	private Game game = null;
     public void readFile() throws IOException{
         String linha = "";
-        Game game = new Game("game_1");
+        this.game = new Game("game_1");
         try (BufferedReader log =  
                 new BufferedReader(new FileReader("log\\games.log"))){
             
